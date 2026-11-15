@@ -1,0 +1,113 @@
+{
+  "app_id": "openwebuidocker",
+  "title": "Open WebUI",
+  "image": "openwebui/open-webui:0.13.3",
+  "repo_name": "openwebui",
+  "mode": "wrapper",
+  "container_port": 8080,
+  "category": [
+    "Artificial_Intelligence"
+  ],
+  "volumes": [
+    {
+      "host": "/Volume1/DockerAppData/openwebuidocker/data",
+      "container": "/app/backend/data"
+    }
+  ],
+  "env": {
+    "TZ": "Asia/Shanghai",
+    "HF_HUB_OFFLINE": "1",
+    "RAG_EMBEDDING_MODEL_AUTO_UPDATE": "false",
+    "ENABLE_OPENAI_API": "true"
+  },
+  "auth": "open-webui",
+  "upstream_url": "https://github.com/open-webui/open-webui",
+  "upstream_license": "BSD-3-Clause",
+  "descript": "Open WebUI is a self-hosted chat interface for local and remote models: talk to Ollama or any OpenAI-compatible API, keep per-user chats, use prompts, documents (RAG), web search and tools, and manage users from the admin panel. Its database, uploads and vector store stay in the application data folder.",
+  "release_note": "1. First release: Open WebUI 0.13.3 from Docker Hub as a non-root container. Self-hosted chat UI for Ollama/OpenAI-compatible backends with RAG and tools; data in the application data folder.",
+  "important": "Requires DockerEngine (installed automatically if missing). Create the admin account on first run; then connect a model backend in Settings - an Ollama instance on your network or an OpenAI-compatible API with its key. Data (SQLite, uploads, vector store) lives in DockerAppData/openwebuidocker/data. The image is large, expect a longer first start. Plain HTTP; use a TLS reverse proxy before exposing it to the internet.",
+  "probe": {
+    "user_in_image": "0:0",
+    "entrypoint": null,
+    "cmd": [
+      "bash",
+      "start.sh"
+    ],
+    "exposed_ports": [
+      8080
+    ],
+    "declared_volumes": [],
+    "image_healthcheck": [
+      "CMD-SHELL",
+      "curl --silent --fail http://localhost:${PORT:-8080}/health | jq -ne 'input.status == true' || exit 1"
+    ],
+    "digest": "openwebui/open-webui@sha256:46b59158e6558eeb980bc828e0f1b30238ad24d82ed84d5e5eda1dab2a082f14",
+    "architecture": "x86_64",
+    "platforms": [
+      "x86_64",
+      "aarch64"
+    ],
+    "http_client_in_image": "curl",
+    "trial_run": {
+      "ok": false,
+      "http_code": "",
+      "state": "exited",
+      "paths": [],
+      "host_port": 18000,
+      "log_tail": "No WEBUI_SECRET_KEY environment variable set, loading from file.\nGenerating new WEBUI_SECRET_KEY...\nstart.sh: line 43: .webui_secret_key: Permission denied",
+      "files_in_mounts": ""
+    },
+    "docker_hub": {},
+    "github": {
+      "owner": "open-webui",
+      "repo": "open-webui",
+      "description": "User-friendly AI Interface (Supports Ollama, OpenAI API, ...)",
+      "license": "NOASSERTION",
+      "homepage": "https://openwebui.com"
+    }
+  },
+  "healthcheck": [
+    "CMD-SHELL",
+    "curl -s -o /dev/null http://127.0.0.1:8080/ || exit 1"
+  ],
+  "entrypoint_file": "src/entrypoint.sh",
+  "platform": "x86_64",
+  "user": "1000:1000",
+  "publisher": "Moechz",
+  "compose_project": "openwebuidocker",
+  "github_repo": "openwebui",
+  "upstream_version": "0.13.3",
+  "release_tag_prefix": "v",
+  "version": "0.13.3-1",
+  "help": "https://github.com/Moechz/openwebui/issues",
+  "official": "https://github.com/open-webui/open-webui",
+  "license": "BSD-3-Clause",
+  "docker_socket": false,
+  "group_add": [],
+  "host_port": 8178,
+  "healthcheck_start_period": "240s",
+  "wrapper_note": "Open WebUI needs a secret key to sign sessions; the upstream image generates\none into its own folder. This wrapper generates a persistent one in the data\nfolder and exports it before starting the app as uid 1000.",
+  "wrapper_note_readme": "- **Entrypoint wrapper**: generates a persistent `WEBUI_SECRET_KEY` in the data folder on first start and runs the upstream `start.sh` as uid 1000.",
+  "translations": {
+    "zh-cn": {
+      "descript": "Open WebUI 是自建的聊天界面，可接本地或远程模型：连接 Ollama 或任何 OpenAI 兼容 API，保存按用户的对话，支持提示词、文档（RAG）、联网搜索与工具，并能在管理面板里管理用户。数据库、上传文件与向量库都保存在应用数据目录。",
+      "important": "需要 DockerEngine（缺失时应用中心会自动安装）。首次运行请创建管理员账号，然后在设置里接入模型后端——网络里的 Ollama 或带 Key 的 OpenAI 兼容 API。数据（SQLite、上传、向量库）保存在 DockerAppData/openwebuidocker/data。镜像较大，首次启动会久一些。界面为纯 HTTP，暴露到公网前请配置带 TLS 的反向代理。",
+      "release_note": "1. 首个版本：基于 Docker Hub 的 Open WebUI 0.13.3，以非 root 容器运行。自建聊天界面，支持 Ollama/OpenAI 兼容后端、RAG 与工具；数据保存在应用数据目录。"
+    },
+    "zh-hk": {
+      "descript": "Open WebUI 是自建的聊天介面，可接本機或遠端模型：連接 Ollama 或任何 OpenAI 相容 API，保存按使用者的對話，支援提示詞、文件（RAG）、聯網搜尋與工具，並能在管理面板裡管理使用者。資料庫、上傳檔案與向量庫都保存在應用資料目錄。",
+      "important": "需要 DockerEngine（缺少時應用中心會自動安裝）。首次執行請建立管理員帳號，然後在設定裡接入模型後端——網路裡的 Ollama 或帶 Key 的 OpenAI 相容 API。資料（SQLite、上傳、向量庫）保存在 DockerAppData/openwebuidocker/data。映像較大，首次啟動會久一些。介面為純 HTTP，公開到互聯網前請配置帶 TLS 的反向代理。",
+      "release_note": "1. 首個版本：基於 Docker Hub 的 Open WebUI 0.13.3，以非 root 容器運行。自建聊天介面，支援 Ollama/OpenAI 相容後端、RAG 與工具；資料保存在應用資料目錄。"
+    }
+  },
+  "data_notes": "`/app/backend/data` (mounted from `DockerAppData/openwebuidocker/data`) holds the SQLite database, uploads, the vector store, cache and `.secret-key`.",
+  "design_notes": [
+    "**Secret generated once.** The wrapper creates a random `WEBUI_SECRET_KEY` in the data folder so sessions survive restarts and no key ships in the package.",
+    "**Runs as uid 1000.** The upstream start script works unprivileged once the data folder is writable."
+  ],
+  "limitations": [
+    "- It is a front end: a model backend (Ollama or an OpenAI-compatible API) is required for answers.",
+    "- The image is large; the first start takes noticeably longer.",
+    "- The UI is plain HTTP; use a TLS reverse proxy before exposing it to the internet."
+  ]
+}
